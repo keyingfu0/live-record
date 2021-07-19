@@ -1,8 +1,3 @@
-// const Koa = require('koa')
-// const Router = require('koa-router')
-// const logger = require('koa-logger')
-// const koaBody = require('koa-body')
-
 import Koa from 'koa'
 import Router from 'koa-router'
 import koaLogger from 'koa-logger'
@@ -17,23 +12,15 @@ const router = new Router()
 
 app.use(koaLogger())
 
-// app.use(render);
-
 app.use(koaBody())
 
 router.post('/webhook', (ctx, next) => {
-  // console.log(ctx)
-  // console.log('taskList.value', taskList.value)
   taskList.value = [...taskList.value, 1]
-  // console.log('taskList.length', taskList.length)
-  // if (taskList.length === 1) {
-  //   isFree.value = true
-  // }
+
   ctx.body = taskList.value
 
   const { body } = ctx.request
-  // console.log('body', ctx.request.body)
-  // logger.log('info', { status: '233' })
+
   const data = JSON.stringify({ taskList: taskList.value, body }).replace(
     /"/g,
     '""'
@@ -42,7 +29,6 @@ router.post('/webhook', (ctx, next) => {
     data: `"${data}"`,
     message: '收到webhook',
   })
-  // logger.info({ status: 'sdsddsd' })
 })
 
 app.use(router.routes()).use(router.allowedMethods())
