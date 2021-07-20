@@ -16,7 +16,7 @@ def upload(file_list):
 
     video = Data()
     try:
-        video.title = file_list[0].replace('.flv', '')
+        video.title = os.path.basename(file_list[0]).replace('.flv', '')
     except IndexError:
         print('超出索引错误')
         return 0
@@ -28,17 +28,18 @@ def upload(file_list):
     with BiliBili(video) as bili:
         bili.login_by_password("461354358@qq.com", "29HM}diCJU7%")
         for file in file_list:
-            localtime = time.asctime(time.localtime(time.time()))
-            print('localtime'+localtime)
+#             localtime = time.asctime(time.localtime(time.time()))
+#             print('localtime'+localtime)
             video_part = bili.upload_file(file)  # 上传视频
             video.videos.append(video_part)  # 添加已经上传的视频
-            localtime = time.asctime(time.localtime(time.time()))
-            print('localtime'+localtime)
+            os.remove(file)  # 删除已经上传的视频
+#             localtime = time.asctime(time.localtime(time.time()))
+#             print('localtime'+localtime)
         # video.cover = bili.cover_up('/cover_path').replace('http:', '')
         ret = bili.submit()  # 提交视频
-        for file in file_list:
+#         for file in file_list:
             #        os.remove(file)
-            os.remove(file)  # 删除已经上传的视频
+
         print('上传结束')
 
 
