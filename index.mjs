@@ -49,7 +49,7 @@ router.post('/webhook', (ctx, next) => {
   const data = getDataForCSV({ taskList: taskList.value, body })
   logger.log('info', {
     data: exportWhenProduction(data),
-    message: `收到webhook: ${EventType} -> ${RelativePath?RelativePath:Title} `,
+    message: getCSVStr(`收到webhook: ${EventType} -> ${RelativePath?RelativePath:Title} `),
   })
 })
 

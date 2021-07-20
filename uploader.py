@@ -44,6 +44,7 @@ def upload(file_list):
 
 if __name__ == '__main__':
     try:
+        print('python 开始上传')
         upload(args.file)
     except Exception as e:
         print(e)
