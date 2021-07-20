@@ -14,7 +14,8 @@ app.use(koaLogger())
 app.use(koaBody())
 
 // const DEBOUNCE_TIME = 30*60*1000;
-const DEBOUNCE_TIME = 7 * 1000
+// 防抖时间
+const DEBOUNCE_TIME = 1 * 1000
 const sendToTask = debounce((event) => {
   // const lastEvent = last(events)
   logger.log('info', {
@@ -49,5 +50,5 @@ router.post('/webhook', (ctx, next) => {
 
 app.use(router.routes()).use(router.allowedMethods())
 
-app.listen(1219)
+app.listen(1219,'127.0.0.1')
 console.log('server is listening on port 1219')

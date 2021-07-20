@@ -1,5 +1,0 @@
-{"level":30,"time":1626675732670,"pid":38124,"hostname":"key-pc","msg":"ttt"}
-{"level":30,"time":1626676893074,"pid":33940,"hostname":"key-pc","msg":"ttt"}
-{"level":30,"time":1626676911099,"pid":31972,"hostname":"key-pc","msg":"ttt"}
-{"level":30,"time":1626676975570,"pid":9444,"hostname":"key-pc","msg":"ttt"}
-{"level":30,"time":1626677022634,"pid":23296,"hostname":"key-pc","msg":"ttt"}

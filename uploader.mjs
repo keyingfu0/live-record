@@ -59,8 +59,22 @@ const 文件列表_按sessionId分组 = computed(()=>{
   })
 })
 
+/**
+ * 为子程序记录日志
+ *
+ * @param chunk
+ * @param level
+ */
+function logChunk(chunk,{level='info'}={}) {
+  const uploaderMessage = chunk.toString()
+  const uploaderMessageSplit = uploaderMessage.split(/\r\n/).slice(0, -1)
 
-
+  for (const message of uploaderMessageSplit) {
+    logger.log(level, {
+      message: '来自uploader: ' + message,
+    })
+  }
+}
 
 effect(() => {
   //  ? 为什么这里taskList的length还是1???? 不能用length判断了
@@ -72,17 +86,16 @@ effect(() => {
 
     const 当前文件列表 =  文件列表_按sessionId分组.value[sessionId_新任务]
     logger.log('info', {
-      data: getDataForCSV({sessionid_新任务: sessionId_新任务,当前文件列表}),
+      data: getDataForCSV({sessionId_新任务,当前文件列表}),
       message: '==================开始上传==================',
     })
-
 
     isFree.value = false
 
     currentUploader = child_process.spawn('py', ['-3', 'uploader.py',当前文件列表])
-    currentUploader.stdout.on('data', function (uploaderMessage) {})
-    currentUploader.stderr.on('data', function (data) {
-      console.log('stderr: ' + data)
+    currentUploader.stdout.on('data', logChunk)
+    currentUploader.stderr.on('data', function (chunk) {
+      logChunk(chunk,{level: 'error'})
     })
     currentUploader.on('close', function (code) {
       logger.log('info', {

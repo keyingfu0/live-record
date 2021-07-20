@@ -22,7 +22,7 @@ export const logger = createLogger({
     format.errors({ stack: true }),
     format.splat(),
     // format.json()
-    CSV.default(['timestamp', 'message', 'data', 'errors'], { delimiter: ',' })
+    CSV.default(['timestamp', 'level','message', 'detail','data', 'error'], { delimiter: ',' })
     // myFormat
   ),
 
@@ -34,7 +34,7 @@ export const logger = createLogger({
       colorize: true,
       timestamp: true,
       level: 'error',
-      filename: './log/task-error.log',
+      filename: './log/log.csv',
       json: true,
     }),
     new transports.File({
@@ -42,7 +42,7 @@ export const logger = createLogger({
       colorize: true,
       timestamp: true,
       level: 'info',
-      filename: './log/task.csv',
+      filename: './log/log.csv',
       json: true,
     }),
   ],
