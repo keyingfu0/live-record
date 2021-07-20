@@ -15,11 +15,13 @@ const configsMap = {
     getUploaderArgs(fileList) {
       return ['py', ['-3', 'uploader-dev.py', ...fileList]]
     },
+    ip: '127.0.0.1'
   },
   production: {
     getUploaderArgs(fileList) {
       return ['python', ['uploader.py', ...fileList]]
     },
+    ip: '10.0.4.14'
   },
 }
 

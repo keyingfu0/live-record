@@ -8,7 +8,7 @@ import koaBody from 'koa-body'
 import {taskList, isFree, getDataForCSV, set事件_按sessionId分组, getCSVStr} from './uploader.mjs'
 import { logger } from './logger.mjs'
 import { debounce, last } from 'lodash-es'
-import {DEBOUNCE_TIME, exportWhenProduction} from "./server.config.mjs";
+import {configs, DEBOUNCE_TIME, exportWhenProduction} from "./server.config.mjs";
 
 const app = new Koa()
 const router = new Router()
@@ -55,5 +55,5 @@ router.post('/webhook', (ctx, next) => {
 
 app.use(router.routes()).use(router.allowedMethods())
 
-app.listen(1219,'127.0.0.1')
+app.listen(1219,configs.ip)
 console.log('server is listening on port 1219')
