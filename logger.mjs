@@ -34,7 +34,7 @@ export const logger = createLogger({
       colorize: true,
       timestamp: true,
       level: 'error',
-      filename: './log/log.csv',
+      filename: './logs/log.csv',
       json: true,
     }),
     new transports.File({
@@ -42,7 +42,7 @@ export const logger = createLogger({
       colorize: true,
       timestamp: true,
       level: 'info',
-      filename: './log/log.csv',
+      filename: './logs/log.csv',
       json: true,
     }),
   ],
