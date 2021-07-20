@@ -11,6 +11,8 @@ import {
 } from '@vue/reactivity'
 import { logger } from './logger.mjs'
 import { groupBy, mapValues } from 'lodash-es'
+import {configs, exportWhenProduction} from "./server.config.mjs";
+
 
 const taskList = shallowRef([])
 
@@ -27,7 +29,7 @@ const watch = (getter, fn) => {
   return () => stop(runner)
 }
 
-function getCSVStr(str) {
+export function getCSVStr(str) {
   const csvStr = str.replace(/"/g, '""')
 
   return `"${csvStr}"`
@@ -93,25 +95,31 @@ effect(() => {
 
   // NOTE 这里用了短路的特性...先判断是否有空
   if (isFree.value && taskList.value[0]) {
+    logger.log('info', {
+      data: exportWhenProduction(getDataForCSV(taskList.value)),
+      message: getCSVStr(`准备上传, 还有${taskList.value.length}项任务`),
+    })
+
     const sessionId_新任务 = taskList.value.shift()
     if (!sessionId_新任务) return
 
     const 当前文件列表 = 文件列表_按sessionId分组.value[sessionId_新任务]
     const  所有事件 = 事件_按sessionId分组[sessionId_新任务]
 
-    const {RelativePath} = 所有事件[0].EventData
+    const {RelativePath,Title} = 所有事件[0].EventData
+    const logData = getDataForCSV({ sessionId_新任务, 当前文件列表,所有事件 })
     logger.log('info', {
-      // data: getDataForCSV({ sessionId_新任务, 当前文件列表,所有事件 }),
-      message: `==================开始上传: ${RelativePath}等==================`,
+      data: exportWhenProduction(logData),
+      message: `==================开始上传: ${Title}==================`,
     })
+    logger.log('info', {
+      message: getCSVStr(`当前文件列表: ${当前文件列表}`),
+    })
+
 
     isFree.value = false
 
-    currentUploader = child_process.spawn('py', [
-      '-3',
-      'uploader.py',
-      ...当前文件列表,
-    ])
+    currentUploader = child_process.spawn(...configs.getUploaderArgs(当前文件列表))
     currentUploader.stdout.on('data', logChunk)
     currentUploader.stderr.on('data', function (chunk) {
       logChunk(chunk, { level: 'error' })
@@ -121,6 +129,11 @@ effect(() => {
         message: `==================上传程序结束: ${RelativePath}等==================`,
       })
       delete 事件_按sessionId分组[sessionId_新任务]
+
+      logger.log('info', {
+        data: exportWhenProduction(getDataForCSV(taskList.value)),
+        message: getCSVStr(`上传完毕, 还有${taskList.value.length}项任务`),
+      })
 
       // NOTE 稍等一会再开始下一个
       setTimeout(()=>{

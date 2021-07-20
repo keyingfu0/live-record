@@ -5,10 +5,10 @@ import Router from 'koa-router'
 import koaLogger from 'koa-logger'
 import koaBody from 'koa-body'
 
-import {taskList, isFree, getDataForCSV, set事件_按sessionId分组} from './uploader.mjs'
+import {taskList, isFree, getDataForCSV, set事件_按sessionId分组, getCSVStr} from './uploader.mjs'
 import { logger } from './logger.mjs'
 import { debounce, last } from 'lodash-es'
-import {DEBOUNCE_TIME} from "./server.config.mjs";
+import {DEBOUNCE_TIME, exportWhenProduction} from "./server.config.mjs";
 
 const app = new Koa()
 const router = new Router()
@@ -21,11 +21,14 @@ app.use(koaBody())
 
 const sendToTask = debounce((event) => {
   // const lastEvent = last(events)
+    const {SessionId,Title} = event.EventData
+
   logger.log('info', {
-    // data: getDataForCSV(event),
-    message: `"录制结束, 防抖时间到, 发送上传任务"`,
+    data: exportWhenProduction(getDataForCSV(event)),
+    message: getCSVStr(`录制结束60秒后, 发送上传任务:`),
   })
   taskList.value = [...taskList.value, event.EventData.SessionId]
+
 }, DEBOUNCE_TIME)
 
 router.post('/webhook', (ctx, next) => {
@@ -45,7 +48,7 @@ router.post('/webhook', (ctx, next) => {
 
   const data = getDataForCSV({ taskList: taskList.value, body })
   logger.log('info', {
-    // data,
+    data: exportWhenProduction(data),
     message: `收到webhook: ${EventType} -> ${RelativePath?RelativePath:Title} `,
   })
 })
