@@ -6,6 +6,7 @@ import koaBody from 'koa-body'
 import { taskList, isFree, events, getDataForCSV } from './uploader.mjs'
 import { logger } from './logger.mjs'
 import { debounce, last } from 'lodash-es'
+import {DEBOUNCE_TIME} from "./server.config.mjs";
 
 const app = new Koa()
 const router = new Router()
@@ -14,8 +15,8 @@ app.use(koaLogger())
 app.use(koaBody())
 
 // const DEBOUNCE_TIME = 30*60*1000;
-// 防抖时间
-const DEBOUNCE_TIME = 1 * 1000
+
+
 const sendToTask = debounce((event) => {
   // const lastEvent = last(events)
   logger.log('info', {
@@ -31,7 +32,6 @@ router.post('/webhook', (ctx, next) => {
   const { body } = ctx.request
   const { EventType, EventData } = body
   const { RelativePath } = EventData
-  console.log('-> RelativePath', RelativePath)
 
   events.push(body)
   if (EventType === 'SessionEnded') {
@@ -44,7 +44,7 @@ router.post('/webhook', (ctx, next) => {
   const data = getDataForCSV({ taskList: taskList.value, body })
   logger.log('info', {
     // data,
-    message: `收到webhook`,
+    message: `收到webhook: ${EventType}`,
   })
 })
 

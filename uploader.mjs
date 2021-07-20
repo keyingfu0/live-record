@@ -87,7 +87,7 @@ effect(() => {
     const 当前文件列表 =  文件列表_按sessionId分组.value[sessionId_新任务]
     logger.log('info', {
       data: getDataForCSV({sessionId_新任务,当前文件列表}),
-      message: '==================开始上传==================',
+      message: '==================开始上传: ==================',
     })
 
     isFree.value = false
