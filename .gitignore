@@ -43,3 +43,6 @@ public/video
 
 # 参考资料, 资源
 /.resources
+
+# py
+__pycache__
