@@ -8,12 +8,12 @@ export function exportWhenProduction(data) {
   return isProduction ? data : ''
 }
 
-export const DEBOUNCE_TIME = isProduction ? 60 * 1000 : 1 * 1000
+export const DEBOUNCE_TIME = isProduction ? 1 * 1000 : 1 * 1000
 
 const configsMap = {
   development: {
     getUploaderArgs(fileList) {
-      return ['py', ['-3', 'uploader.py', ...fileList]]
+      return ['py', ['-3', 'uploader-dev.py', ...fileList]]
     },
   },
   production: {
