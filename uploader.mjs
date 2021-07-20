@@ -126,7 +126,7 @@ effect(() => {
     })
     currentUploader.on('close', function (code) {
       logger.log('info', {
-        message: `==================上传程序结束: ${RelativePath}等==================`,
+        message: `==================上传程序结束: ${Title}等==================`,
       })
       delete 事件_按sessionId分组[sessionId_新任务]
 
