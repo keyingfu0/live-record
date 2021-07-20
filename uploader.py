@@ -4,7 +4,7 @@ import time
 import argparse
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-# time.sleep(10)
+time.sleep(30)
 
 
 parser = argparse.ArgumentParser(description='Test for argparse')
@@ -19,7 +19,6 @@ def upload(file):
 
 if __name__ == '__main__':
     try:
-#         print(args)
         upload(args.file)
     except Exception as e:
         print(e)

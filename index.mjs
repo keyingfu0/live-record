@@ -1,9 +1,11 @@
+// noinspection JSNonASCIINames
+
 import Koa from 'koa'
 import Router from 'koa-router'
 import koaLogger from 'koa-logger'
 import koaBody from 'koa-body'
 
-import { taskList, isFree, events, getDataForCSV } from './uploader.mjs'
+import {taskList, isFree, getDataForCSV, set事件_按sessionId分组} from './uploader.mjs'
 import { logger } from './logger.mjs'
 import { debounce, last } from 'lodash-es'
 import {DEBOUNCE_TIME} from "./server.config.mjs";
@@ -31,9 +33,9 @@ router.post('/webhook', (ctx, next) => {
 
   const { body } = ctx.request
   const { EventType, EventData } = body
-  const { RelativePath } = EventData
+  const { RelativePath,Title } = EventData
 
-  events.push(body)
+  set事件_按sessionId分组(body)
   if (EventType === 'SessionEnded') {
     sendToTask(body)
   }
@@ -44,7 +46,7 @@ router.post('/webhook', (ctx, next) => {
   const data = getDataForCSV({ taskList: taskList.value, body })
   logger.log('info', {
     // data,
-    message: `收到webhook: ${EventType}`,
+    message: `收到webhook: ${EventType} -> ${RelativePath?RelativePath:Title} `,
   })
 })
 
